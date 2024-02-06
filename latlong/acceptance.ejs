@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload Image with Actual Lat Long and PAN</title>
+</head>
+
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
+        <label for="fileUpload">Select an image:</label>
+        <input type="file" name="fileUpload" id="fileUpload" accept="image/*">
+        <br>
+        <!-- Hidden input fields for actual latitude and longitude -->
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+        <br>
+        <!-- PAN input field -->
+        <label for="panNumber">PAN Number:</label>
+        <input type="text" name="panNumber" id="panNumber" maxlength="10">
+        <br>
+        <button type="button" onclick="getLocationAndSubmit()">Upload Image</button>
+    </form>
+
+    <!-- Display the uploaded image -->
+    <div id="imageContainer"></div>
+
+    <script>
+        function getLocationAndSubmit() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const currentLatitude = position.coords.latitude;
+                    const currentLongitude = position.coords.longitude;
+
+                    // Set the values in the hidden input fields
+                    document.getElementById('latitude').value = currentLatitude;
+                    document.getElementById('longitude').value = currentLongitude;
+
+                    // Submit the form
+                    document.getElementById('uploadForm').submit();
+                }, function(error) {
+                    console.error('Error getting location:', error.message);
+                    alert('Error getting location. Please allow location access.');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        }
+    </script>
+</body>
+
+</html>

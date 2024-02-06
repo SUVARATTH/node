@@ -1,0 +1,15 @@
+<h1>Text from Backend:</h1>
+<ul>
+    <li>Your Score:
+        <%= data['Your Score'] %>
+    </li>
+    <li>You are eligible for a loan amount of:
+        <%= data['you are eligible for loan amt'] %>
+    </li>
+    <li>At an interest rate of:
+        <%= data['At interest of'] %>
+    </li>
+</ul>
+<form action='/accept' method="get">
+    <button>Im interested</button>
+</form>

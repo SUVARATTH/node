@@ -1,0 +1,33 @@
+<!-- alldata.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Data</title>
+</head>
+
+<body>
+    <h1>All Data</h1>
+
+    <ul>
+        <% data.forEach(item => { %>
+            <li>
+                <p><strong>PAN:</strong>
+                    <%= item.PAN %>
+                </p>
+                <p><strong>Latitude:</strong>
+                    <%= item.lat %>
+                </p>
+                <p><strong>Longitude:</strong>
+                    <%= item.long %>
+                </p>
+                <p><strong>Image:</strong> <img src="data:image/png;base64, <%= item.img %>" alt="Image"></p>
+            </li>
+            <% }); %>
+    </ul>
+</body>
+
+</html>

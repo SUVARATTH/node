@@ -1,0 +1,28 @@
+<!-- index.ejs
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload with Location</title>
+</head>
+
+<body>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <input type="hidden" name="latitude" id="latitude" value="12345">
+        <input type="hidden" name="longitude" id="longitude" value="321143">
+        <button type="button" onclick="getLocationAndSubmit()">Get Location and Upload</button>
+    </form>
+
+</body>
+
+</html> -->
+
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" /><br>
+    <input type="text" id="PAN" name="PAN">
+    <button type="submit">Upload Image</button>
+</form>
