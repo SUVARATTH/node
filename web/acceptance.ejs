@@ -1,0 +1,74 @@
+<body>
+    <div id="demo"></div>
+
+    <script>
+        const x = document.getElementById("demo");
+        const pan = document.getElementById('PAN');
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, handleGeolocationError);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            localStorage.setItem('lat', latitude);
+            localStorage.setItem('long', longitude);
+        }
+
+        function doRequest(event) {
+            var loan = document.getElementById('loan');
+            var PANInput = document.getElementById('PAN');
+            var position = {
+                lat: localStorage.getItem('lat'),
+                long: localStorage.getItem('long'),
+                loan: loan.value,
+                PAN: PANInput.value
+            };
+
+            console.log(position);
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(xhttp.responseText);
+
+                    x.innerHTML = "XHR request responded as: " + xhttp.responseText;
+                    // Redirect to the new page
+                    window.location.href = 'http://localhost:3000/next';
+                }
+            };
+            xhttp.open("POST", "/location", true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.setRequestHeader("Authorization", localStorage.getItem("token"));
+            xhttp.send(JSON.stringify(position));
+        }
+
+        function handleGeolocationError(error) {
+            if (error.code === error.PERMISSION_DENIED) {
+                x.innerHTML = "User denied Geolocation access. Please allow access and try again.";
+            } else {
+                x.innerHTML = "Error getting geolocation: " + error.message;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            getLocation();
+        });
+    </script>
+
+    <form id="form1" action='/next'>
+        <label for="PAN">PAN:</label>
+        <input type="text" id="PAN" name="PAN">
+
+        <label for="loan">LOAN AMOUNT:</label>
+        <input type="text" id="loan" name="loan">
+
+        <button type="button" onclick="doRequest(event)">Get Location</button>
+    </form>
+</body>

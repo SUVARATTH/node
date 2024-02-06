@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocation Button</title>
+</head>
+
+<body>
+
+    <div id="demo"></div>
+
+
+    <script>
+        const x = document.getElementById("demo");
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, handleGeolocationError);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            localStorage.setItem('lat', latitude);
+            localStorage.setItem('long', longitude);
+
+
+            // const latitudeloc = localStorage('lat', latitude);
+            // const longitudeloc = localStorage('long', longitude);
+
+        }
+
+        function doRequest(event) {
+            event.preventDefault();
+            var postion = {
+                lat: localStorage.getItem('lat'),
+                long: localStorage.getItem('long')
+            }
+            console.log(postion)
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Typical action to be performed when the document is ready:
+                    console.log(xhttp.responseText);
+                    x.innerHTML = "XHR request responded as: " + xhttp.responseText;
+                    window.location.href = "http://localhost:3000/hello";
+                }
+            };
+            xhttp.open("POST", "/abc", true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+            xhttp.send(JSON.stringify(postion));
+            return false;
+        }
+
+        function handleGeolocationError(error) {
+            if (error.code === error.PERMISSION_DENIED) {
+                x.innerHTML = "User denied Geolocation access. Please allow access and try again.";
+            } else {
+                x.innerHTML = "Error getting geolocation: " + error.message;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            getLocation();
+        })
+    </script>
+    <form id="form1" action='/next'><button type="button" onclick="doRequest(event)">Get Location</button></form>
+</body>
+
+</html>
