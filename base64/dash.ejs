@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Convert to Base64</title>
+</head>
+
+<body>
+    <input type="file" id="fileInput" onchange="convertToBase64()">
+    <br><br>
+
+    <div>
+        <img id="previewImage" alt="Preview Image" style="max-width: 100%; max-height: 300px;">
+    </div>
+
+    <div>
+        <textarea id="base64Output" rows="10" style="width: 100%;" placeholder="Base64 Output"></textarea>
+    </div>
+
+    <button onclick="sendToBackend()">Send to Backend</button>
+
+    <script>
+        function convertToBase64() {
+            const fileInput = document.getElementById('fileInput');
+            const previewImage = document.getElementById('previewImage');
+            const base64Output = document.getElementById('base64Output');
+
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const base64String = event.target.result.split(',')[1];
+                    previewImage.src = event.target.result;
+                    base64Output.value = base64String;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function sendToBackend() {
+            const base64String = document.getElementById('base64Output').value;
+
+            // Create a new XMLHttpRequest object
+            const xhr = new XMLHttpRequest();
+
+            // Set up a POST request to the backend endpoint
+            xhr.open('POST', '/back', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // Set up a callback function to handle the response
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log('Backend response:', JSON.parse(xhr.responseText));
+                    } else {
+                        console.error('Error sending data to backend. Status:', xhr.status);
+                    }
+                }
+            };
+
+            // Send the data to the backend as JSON
+            xhr.send(JSON.stringify({
+                base64String
+            }));
+        }
+    </script>
+</body>
+
+</html>
